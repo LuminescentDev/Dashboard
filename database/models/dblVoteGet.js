@@ -23,10 +23,10 @@ module.exports = async (client, info) => {
 				client.channels.cache.get(client.config.votechannel).send({ embeds: [voteEmbed]});
 			}else{
 				//get users vote total from the database and add 1 and update lastevote to current time
-				client.con.query(`UPDATE Users Set voteTotal = ${value.voteTotal += 1}, lastVote = ${Date.now()} where userID = "${info.id}"`);
+				client.con.query(`UPDATE Users Set voteTotal = ${user.voteTotal += 1}, lastVote = ${Date.now()} where userID = "${info.id}"`);
 
 				//set embed description and send it to the vote channel
-				voteEmbed.setDescription(`Thank you for voting ${client.users.cache.get(info.id).username}\n You now have ${value.voteTotal} Votes!\nYou can vote again in <t:${Math.floor(Date.now()/1000 + 43200)}:R>`);
+				voteEmbed.setDescription(`Thank you for voting ${client.users.cache.get(info.id).username}\n You now have ${user.voteTotal} Votes!\nYou can vote again in <t:${Math.floor(Date.now()/1000 + 43200)}:R>`);
 				client.channels.cache.get(client.config.votechannel).send({ embeds: [voteEmbed]});
 			}
 	} catch (error) {
