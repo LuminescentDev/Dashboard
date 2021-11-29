@@ -1,0 +1,14 @@
+<%- include("partials/header", { bot, user, path, title: "Home" }) %>
+
+<div class="container-sm center" style="margin-top: 25px;">
+  <div class="d-grid gap-2 col-6 mx-auto">
+    <h2 style="text-align: center;">Shoto bot a multipurpose bot with fun anime commands as well as utilities!</h2>
+    <div id="buttons">
+    <a class="btn btn-primary text-white" style="width: 100px; text-align: center;" href="/dashboard">Dashboard</a>
+    <a class="btn btn-primary text-white" style="width: 150px; text-align: center;" href="<%= discordInvite %>" target="_blank" rel="noopener noreferrer">Support Server</a>
+    </div>
+    <h1 style="text-align: center;">Users: <%- bot.users.cache.size %> Servers: <%- bot.guilds.cache.size %> </h1>
+  </div>
+</div>
+
+<%- include("partials/footer") %>
