@@ -317,13 +317,13 @@ module.exports = async (client) => {
 			res.json({
 				message: "ok got it!"
 			});
-			require("../database/functions/topggVoteGet")(client,body);
+			require("../database/models/topggVoteGet")(client,body);
 		}else if(headers.authorization === config.topgg_webhook_auth){
 			res.statusCode = 200;
 			res.json({
 				message: "ok got it!"
 			});
-			require("../database/functions/dblVoteGet")(client,body);
+			require("../database/models/dblVoteGet")(client,body);
 		}else{
 			res.statusCode = 401;
 			res.json({
