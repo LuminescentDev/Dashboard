@@ -33,7 +33,7 @@ module.exports = (client, info) => {
 			}
 		});
 	} catch (error) {
-		client.users.cache.get(client.config.ownerID[0]).send(`${error}`);
+		client.users.cache.get(client.config.ownerID).send(`${error}`);
 		client.channels.cache.get(client.config.errorChannelID).send(`Error with receiving vote: ${error}`);
 	}
 }; 
