@@ -318,7 +318,7 @@ module.exports = async (client) => {
 				message: "ok got it!"
 			});
 			require("../database/models/topggVoteGet")(client,body);
-		}else if(headers.authorization === config.topgg_webhook_auth){
+		}else if(headers.authorization === config.dbl_webhook_auth){
 			res.statusCode = 200;
 			res.json({
 				message: "ok got it!"
