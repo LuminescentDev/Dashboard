@@ -224,6 +224,20 @@ module.exports = async (client) => {
     });
   });
 
+  app.get("/staff", (req, res) => {
+    renderTemplate(res, req, "staff.ejs", {
+      discordInvite: config.discordInvite,
+    });
+  });
+
+  app.get("/user", checkAuth, async (req, res) => {
+    const results = await client.getUser(req.user.id);
+    renderTemplate(res, req, "user.ejs", {
+      discordInvite: config.discordInvite,
+      results
+    });
+  });
+
   // Dashboard endpoint.
   app.get("/dashboard", checkAuth, (req, res) => {
     renderTemplate(res, req, "dashboard.ejs", { perms: Permissions });

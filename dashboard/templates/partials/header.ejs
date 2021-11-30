@@ -21,6 +21,9 @@
           <li class="nav-item">
             <a class="nav-link" href="https://discord.gg/CNrvu6A">Support Server</a>
           </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/staff">Staff</a>
+          </li>
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" id="navbarScrollingDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
               Legal
@@ -35,9 +38,11 @@
           <% if (user) { %>
             <li class="nav-item dropdown">
               <a class="nav-link dropdown-toggle" href="#" id="navbarScrollingDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                Logged in as <%= user.username %>#<%= user.discriminator %>
+                <img src=<%= `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}` %> alt=<%= `${user.username}'s avatar` %> style="width:24px;height:24px; border-radius: 50px">
+                <%= user.username %>#<%= user.discriminator %>
               </a>
               <ul class="dropdown-menu" aria-labelledby="navbarScrollingDropdown">
+                <li><a class="dropdown-item" href="/user">Profile</a></li>
                 <li><a class="dropdown-item" href="/dashboard">Dashboard</a></li>
                 <li><a class="dropdown-item" href="https://discord.gg/CNrvu6A">Support Server</a></li>
                 <li><hr class="dropdown-divider"></li>

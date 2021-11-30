@@ -7,7 +7,7 @@
 
 // We import the modules.
 const config = require("./config");
-const fs = require("fs")
+const fs = require("fs");
 const Dashboard = require("./dashboard/dashboard");
 const { Client, Intents, Permissions } = require("discord.js");
 
@@ -25,6 +25,10 @@ client.on("ready", async () => {
   //   await guild.members.fetch();
   // }
   // console.log("Fetched members.");
+
+  client.users.fetch("584459141179768833");
+  client.users.fetch("798738506859282482");
+  client.users.fetch("249638347306303499");
 
   console.log(
     `Bot is ready. (${client.guilds.cache.size} Guilds - ${client.channels.cache.size} Channels - ${client.users.cache.size} Users)`,

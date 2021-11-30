@@ -4,12 +4,40 @@
   Write some style to begin.
 */
 
-.card-body {
-  background-color: rgb(65, 65, 65);
-  color: whitesmoke;
+.card {
+  background-color: rgba(65, 65, 65, 0);
+  color: rgb(245, 245, 245);
+  border-radius: 50%; 
+  border: none;
+  text-align: center;
 }
 
-#buttons {
+.disabled {
+  filter: grayscale(100%);
+}
+
+.hoverable:hover {
+  animation-name: in;
+  animation-duration: 0.3s;
+  animation-fill-mode: forwards;
+}
+.hoverable {
+  animation-name: out;
+  animation-duration: 0.3s;
+  animation-fill-mode: forwards;
+}
+
+@keyframes in{
+  from {transform: scale(1);}
+  to {transform: scale(0.9);}
+}
+
+@keyframes out{
+  from {transform: scale(0.9);}
+  to {transform: scale(1);}
+}
+
+.wrap {
   display: flex;
   flex-direction: row;
   justify-content: center;
@@ -18,6 +46,6 @@
 
 body {
   position: relative;
-  background-color: rgb(65, 65, 65);
+  background-color: rgb(41, 41, 41);
   color: whitesmoke;
 }

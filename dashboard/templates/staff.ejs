@@ -2,12 +2,33 @@
 
 <div class="container-sm center" style="margin-top: 25px;">
   <div class="d-grid gap-2 col-6 mx-auto">
-    <h2 style="text-align: center;">Shoto bot a multipurpose bot with fun anime commands as well as utilities!</h2>
-    <div id="buttons">
-    <a class="btn btn-primary text-white" style="width: 100px; text-align: center;" href="/dashboard">Dashboard</a>
-    <a class="btn btn-primary text-white" style="width: 150px; text-align: center;" href="<%= discordInvite %>" target="_blank" rel="noopener noreferrer">Support Server</a>
+        <h2 style="text-align: center;">Developers</h2>
+        <div class="wrap">
+            <div class="card" style="max-width: 15rem; margin: 2rem; min-width: 10em;">
+                <%- `<img src="${bot.users.cache.get("584459141179768833").displayAvatarURL({ dynamic: true, size: 2048 })}" class="card">`%>
+            <div class="card-body">
+                <h5 class="card-title"><%= bot.users.cache.get("584459141179768833").username %></h5>
+                <p class="card-text">Hey my names oli, other than developing shoto im not very interesting</p>
+            </div>
+        </div>
+        <div class="card" style="max-width: 15rem; margin: 2rem; min-width: 10em;">
+            <%- `<img src="${bot.users.cache.get("798738506859282482").displayAvatarURL({ dynamic: true, size: 2048 })}" class="card">`%>
+            <div class="card-body">
+                <h5 class="card-title"><%= bot.users.cache.get("798738506859282482").username %></h5>
+                <p class="card-text">Hey my names oli, This is just my alt</p>
+            </div>
+        </div>
     </div>
-    <h1 style="text-align: center;">Users: <%- bot.users.cache.size %> Servers: <%- bot.guilds.cache.size %> </h1>
+    <h2 style="text-align: center;">Contributors</h2>
+    <div class="wrap">
+        <div class="card" style="max-width: 15rem; margin: 2rem; min-width: 10em;">
+            <%- `<img src="${bot.users.cache.get("249638347306303499").displayAvatarURL({ dynamic: true, size: 2048 })}" class="card">`%>
+            <div class="card-body">
+                <h5 class="card-title"><%= bot.users.cache.get("249638347306303499").username %></h5>
+                <p class="card-text">Hey my name's sab, I work on a Minecraft server called Nether Depths and a discord bot named Pup, I also want to be a chef for a living.</p>
+            </div>
+        </div>
+    </div>
   </div>
 </div>
 

@@ -1,0 +1,16 @@
+<%- include("partials/header", { bot, user, path, title: "Home" }) %>
+
+<div class="container-sm center" style="margin-top: 25px;">
+  <div class="d-grid gap-2 col-6 mx-auto">
+    <h2 style="text-align: center;">
+        <img src=<%= `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}` %> alt=<%= `${user.username}'s avatar` %> style="width:96px;height:96px;">
+        <%= user.username %>#<%= user.discriminator %>
+    </h2>
+    <div class="wrap">
+    
+    </div>
+    <h1 style="text-align: center;">Votes: <%- results.voteTotal %> Servers: <%- bot.guilds.cache.size %> </h1>
+  </div>
+</div>
+
+<%- include("partials/footer") %>
