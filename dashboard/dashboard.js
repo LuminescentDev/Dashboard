@@ -110,7 +110,7 @@ module.exports = async (client) => {
   // We bind the domain.
   app.locals.domain = config.domain.split("//")[1];
 
-  // We set out templating engine.
+  // We set out the template engine.
   app.engine("ejs", ejs.renderFile);
   app.set("view engine", "ejs");
 
@@ -262,10 +262,10 @@ module.exports = async (client) => {
       return res.redirect("/dashboard");
     }
 
-    // We retrive the settings stored for this guild.
+    // We retrieve the settings stored for this guild.
     let storedSettings = await client.getSettings(req.params.guildID);
     if (!storedSettings) {
-      // If there are no settings stored for this guild, we create them and try to retrive them again.
+      // If there are no settings stored for this guild, we create them and try to retrieve them again.
       client.setSettings(req.params.guildID);
       storedSettings = await client.getSettings(req.params.guildID);
       storedSettings = storedSettings
@@ -306,10 +306,10 @@ module.exports = async (client) => {
       console.log(e);
     });
 
-    // We retrive the settings stored for this guild.
+    // We retrieve the settings stored for this guild.
     let storedSettings = await client.getSettings(req.params.guildID);
     if (!storedSettings) {
-      // If there are no settings stored for this guild, we create them and try to retrive them again.
+      // If there are no settings stored for this guild, we create them and try to retrieve them again.
       client.setSettings(guild.id);
       storedSettings = await client.getSettings(req.params.guildID);
       storedSettings = storedSettings
@@ -331,13 +331,13 @@ module.exports = async (client) => {
 			res.json({
 				message: "ok got it!"
 			});
-			require("../database/models/topggVoteGet")(client,body);
+			await require("../database/models/topggVoteGet")(client,body);
 		}else if(headers.authorization === config.dbl_webhook_auth){
 			res.statusCode = 200;
 			res.json({
 				message: "ok got it!"
 			});
-			require("../database/models/dblVoteGet")(client,body);
+      await	require("../database/models/dblVoteGet")(client,body);
 		}else{
 			res.statusCode = 401;
 			res.json({
