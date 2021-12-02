@@ -323,7 +323,7 @@ module.exports = async (client) => {
     });
   });
 
-	app.post("/webhook", function (req, res) {
+	app.post("/webhook", async (req, res) => {
 		let body = req.body;
 		let headers = req.headers;
 		if(headers.authorization === config.topgg_webhook_auth){
