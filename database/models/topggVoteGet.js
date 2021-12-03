@@ -6,6 +6,8 @@ function sleep(ms) {
 
 module.exports = async (client, info) => {
 
+	console.log(info)
+
 	//initiate the embed
 	let voteEmbed = new MessageEmbed()
     .setTitle("Vote Received")
