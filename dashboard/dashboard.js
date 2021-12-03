@@ -11,7 +11,7 @@ const config = require("../config");
 const passport = require("passport");
 const bodyParser = require("body-parser");
 const session = require("express-session");
-const { Permissions } = require("discord.js");
+const { Permissions, MessageEmbed } = require("discord.js");
 const Strategy = require("passport-discord").Strategy;
 const { boxConsole } = require("../functions/boxConsole");
 function sleep(ms) {
