@@ -11,12 +11,10 @@ const config = require("../config");
 const passport = require("passport");
 const bodyParser = require("body-parser");
 const session = require("express-session");
-const { Permissions, MessageEmbed } = require("discord.js");
+const { Permissions } = require("discord.js");
 const Strategy = require("passport-discord").Strategy;
 const { boxConsole } = require("../functions/boxConsole");
-function sleep(ms) {
-	return new Promise(res => setTimeout(res, ms));
-}
+
 // We instantiate express app and the session store.
 const app = express();
 const MemoryStore = require("memorystore")(session);
@@ -333,65 +331,13 @@ module.exports = async (client) => {
 			res.json({
 				message: "ok got it!"
 			});
-      //initiate the embed
-      let voteEmbed = new MessageEmbed()
-      .setTitle("Vote Received")
-      .setURL(`https://top.gg/bot/${client.user.id}/vote`);
-    try {
-      //select the user from the database
-      const user = await client.getUser(body.id);
-        //if user does not exist add them
-        if(!user) {
-          require("./user")(client, body.user);
-          sleep(100);
-          client.con.query(`UPDATE Users Set voteTotal = 1, lastVote = ${Date.now()} where userID = "${body.user}"`);
-          //set embed description and send it to the vote channel
-          voteEmbed.setDescription(`Thank you for voting ${client.users.cache.get(body.user).username}\n You now have 1 Vote!\n You can vote again in <t:${Math.floor(Date.now()/1000 + 43200)}:R>`);
-          client.channels.cache.get(config.votechannel).send({ embeds: [voteEmbed]});
-        }else{
-          //get users vote total from the database and add 1 and update lastevote to current time
-          client.con.query(`UPDATE Users Set voteTotal = ${user.voteTotal += 1}, lastVote = ${Date.now()} where userID = "${body.user}"`);
-
-          //set embed description and send it to the vote channel
-          voteEmbed.setDescription(`Thank you for voting ${client.users.cache.get(body.user).username}\n You now have ${user.voteTotal} Votes!\nYou can vote again in <t:${Math.floor(Date.now()/1000 + 43200)}:R>`);
-          client.channels.cache.get(config.votechannel).send({ embeds: [voteEmbed]});
-        }
-    } catch (error) {
-      client.users.cache.get(config.ownerID).send(`${error}`);
-      client.channels.cache.get(config.errorChannelID).send(`Error with receiving vote: ${error}`);
-    }
+			await require("../database/models/topggVoteGet")(client,body);
 		}else if(headers.authorization === config.dbl_webhook_auth){
 			res.statusCode = 200;
 			res.json({
 				message: "ok got it!"
 			});
-      //initiate the embed
-      let voteEmbed = new MessageEmbed()
-      .setTitle("Vote Received")
-      .setURL(`https://discordbotlist.com/bots/shoto/upvote`);
-      try {
-      //select the user from the database
-      const user = await client.getUser(body.id);
-        //if user does not exist add them
-        if(!user) {
-          require("../database/models/user")(client, body.id);
-          sleep(100);
-          client.con.query(`UPDATE Users Set voteTotal = 1, lastVote = ${Date.now()} where userID = "${body.id}"`);
-          //set embed description and send it to the vote channel
-          voteEmbed.setDescription(`Thank you for voting ${client.users.cache.get(body.id).username}\n You now have 1 Vote!\n You can vote again in <t:${Math.floor(Date.now()/1000 + 43200)}:R>`);
-          client.channels.cache.get(config.votechannel).send({ embeds: [voteEmbed]});
-        }else{
-          //get users vote total from the database and add 1 and update lastevote to current time
-          client.con.query(`UPDATE Users Set voteTotal = ${user.voteTotal += 1}, lastVote = ${Date.now()} where userID = "${body.id}"`);
-
-          //set embed description and send it to the vote channel
-          voteEmbed.setDescription(`Thank you for voting ${client.users.cache.get(body.id).username}\n You now have ${user.voteTotal} Votes!\nYou can vote again in <t:${Math.floor(Date.now()/1000 + 43200)}:R>`);
-          client.channels.cache.get(config.votechannel).send({ embeds: [voteEmbed]});
-        }
-      } catch (error) {
-      client.users.cache.get(config.ownerID).send(`${error}`);
-      client.channels.cache.get(config.errorChannelID).send(`Error with receiving vote: ${error}`);
-      }
+      await	require("../database/models/dblVoteGet")(client,body);
 		}else{
 			res.statusCode = 401;
 			res.json({
