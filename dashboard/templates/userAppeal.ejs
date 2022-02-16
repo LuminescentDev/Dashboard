@@ -1,0 +1,18 @@
+<%- include("partials/header", { bot, user, path, title: `User | ${user.username}` }) %>
+
+<div class="container-sm center" style="margin-top: 25px;">
+  <div class="d-grid gap-2 col-6 mx-auto">
+      <form method="POST">
+      <p class="h5" style="margin-bottom: 0.5rem; margin-top: 10px;">Blacklist reason:</p>
+      <p style="font-style: italic;" class="disabled">The reason for your blacklist (run the blacklist command if you don't know why you were blacklisted).</p>
+      <input id="blacklistReason" type="text" class="form-control" name="blacklistReason" placeholder="Your blacklist reason message." maxlength="6000">
+      <p class="h5" style="margin-bottom: 0.5rem; margin-top: 10px;">Appeal message:</p>
+      <p style="font-style: italic;" class="disabled">This message will be sent to shoto's moderators for consideration.</p>
+      <input id="appealMessage" type="text" class="form-control" name="appealMessage" placeholder="Your appeal message." minlength="250" maxlength="6000">
+      <br>
+      <center><button type="submit" class="btn btn-primary text-white hoverable" style="width: 100px; text-align: center;">Submit</button></center>
+      </form>
+  </div>
+</div>
+
+<%- include("partials/footer") %>

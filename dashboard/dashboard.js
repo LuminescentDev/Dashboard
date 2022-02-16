@@ -11,7 +11,7 @@ const config = require("../config");
 const passport = require("passport");
 const bodyParser = require("body-parser");
 const session = require("express-session");
-const { Permissions } = require("discord.js");
+const { Permissions, MessageActionRow, MessageButton, MessageEmbed } = require("discord.js");
 const Strategy = require("passport-discord").Strategy;
 const { boxConsole } = require("../functions/boxConsole");
 
@@ -21,6 +21,7 @@ const MemoryStore = require("memorystore")(session);
 
 // We export the dashboard as a function which we call in ready event.
 module.exports = async (client) => {
+
   // We declare absolute paths.
   const dataDir = path.resolve(`${process.cwd()}${path.sep}dashboard`); // The absolute path of current this directory.
   const templateDir = path.resolve(`${dataDir}${path.sep}templates`); // Absolute path of ./templates directory.
@@ -230,12 +231,90 @@ module.exports = async (client) => {
     });
   });
 
+		app.get('/music', checkAuth, (req, res) => 
+    renderTemplate(res, req, 'music.ejs', { 
+      perms: Permissions 
+    }));
+
   app.get("/user", checkAuth, async (req, res) => {
     const results = await client.getUser(req.user.id);
+    const blacklist = await client.query(`SELECT * FROM blacklist WHERE userID = '${req.user.id}'`);
     renderTemplate(res, req, "user.ejs", {
       discordInvite: config.discordInvite,
-      results
+      results,
+      blacklist,
+      alert: null
     });
+  });
+
+  app.post("/user", checkAuth, async (req, res) => {
+    client.query(`UPDATE Users SET
+    profileColor = ${`"${req.body.profileColor}"` ? `"${req.body.profileColor}"` : `#1C1C1C`},
+    textColor = ${`"${req.body.textColor}"` ? `"${req.body.textColor}"` : `"#FFFFFF"`},
+    WHERE userID = "${req.user.id}"`);
+    const results = await client.getUser(req.user.id);
+    const blacklist = await client.query(`SELECT * FROM blacklist WHERE userID = '${req.user.id}'`);
+    console.log(req)
+    renderTemplate(res, req, "user.ejs", {
+      discordInvite: config.discordInvite,
+      results,
+      blacklist,
+      alert: "Profile Updated"
+    });
+  });
+
+  app.get("/user/:userID", checkAuth, async (req, res) => {
+    if (!req.params.userID) return res.redirect("/user");
+    if (req.user.id !== config.ownerID) return res.redirect("/user");
+    const results = await client.getUser(req.params.userID);
+    const reqUser = client.users.cache.get(req.params.userID);
+    if(!reqUser) client.users.fetch(req.params.userID);
+    renderTemplate(res, req, "userOther.ejs", {
+      discordInvite: config.discordInvite,
+      results,
+      reqUser
+    });
+  });
+
+  app.get("/user/blacklist/appeal", checkAuth, async (req, res) => {
+    const results = await client.getUser(req.user.id);
+    const blacklist = await client.query(`SELECT * FROM blacklist WHERE userID = '${req.user.id}'`);
+    if(!blacklist.length == 1 && blacklist.appealed !== 0) return res.redirect("/user");
+    renderTemplate(res, req, "userAppeal.ejs", {
+      discordInvite: config.discordInvite,
+      results,
+      blacklist,
+      alert: null
+    });
+  });
+
+  app.post("/user/blacklist/appeal", checkAuth, async (req, res) => {
+    const results = await client.getUser(req.user.id);
+    const blacklist = await client.query(`SELECT * FROM blacklist WHERE userID = '${req.user.id}'`);
+    if(blacklist.length == 1 && blacklist.appealed !== 1) {
+      const embed = new MessageEmbed()
+      .setTitle("Blacklist Appeal")
+      .addField("User", `${req.user.username}#${req.user.discriminator}`)
+      .addField("Reason", req.body.blacklistReason)
+      .addField("Appeal Message", req.body.appealMessage)
+      .setColor("#ff0000")
+      const row = new MessageActionRow()
+      .addComponents(
+        new MessageButton()
+        .setCustomId("acceptAppeal")
+        .setLabel("Accept")
+        .setStyle("SUCCESS"))
+      .addComponents(
+        new MessageButton()
+        .setCustomId("denyAppeal")
+        .setLabel("Deny")
+        .setStyle("DANGER"))
+      client.guilds.cache.get("740705740221841450").channels.cache.get("916156561813016617").send({ embeds: [embed], components: [row] })
+      await client.query(`UPDATE blacklist SET appealed = 1 WHERE userID = '${req.user.id}'`);
+      res.redirect("/user");
+    } else {
+      res.redirect("/user");
+    }
   });
 
   // Dashboard endpoint.
@@ -295,8 +374,11 @@ module.exports = async (client) => {
     prefix="${setting.prefix ? setting.prefix : '^'}",
     joinMessage=${`"${setting.joinMessage}"` ? `"${setting.joinMessage}"` : null},
     leaveMessage=${`"${setting.leaveMessage}"` ? `"${setting.leaveMessage}"` : null},
+    logChannelID=${`"${setting.logChannelID}"` ? `"${setting.logChannelID}"` : null},
+    logTypes=${ setting.logTypes ? setting.logTypes : null},
     joinChannelID=${`"${setting.joinChannelID}"` ? `"${setting.joinChannelID}"` : null},
     ventChannelID=${`"${setting.ventChannelID}"` ? `"${setting.ventChannelID}"` : null},
+    vLogChannelID=${`"${setting.vLogChannelID}"` ? `"${setting.vLogChannelID}"` : null},
     AchannelID=${`"${setting.AchannelID}"` ? `"${setting.AchannelID}"` : null},
     ReviveRoleID=${`"${setting.ReviveRoleID}"` ? `"${setting.ReviveRoleID}"` : null},
     reviveMessage=${`"${setting.reviveMessage}"` ? `"${setting.reviveMessage}"` : null},

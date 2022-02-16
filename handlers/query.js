@@ -5,8 +5,10 @@ module.exports = (client, args) => {
 				if(err) return err;
 				resolve(rows, fields);
 			}).on("error", err => {
-				  reject(`Error: ${err.message}`);
+				reject(`Error: ${err.message}`);
 			});
-		  });
+		}).catch(err => {
+			console.log(err);
+		});
 	}; 
 }; 

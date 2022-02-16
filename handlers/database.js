@@ -5,7 +5,7 @@ module.exports = async client => {
 	/**
 	 * Database Functions
 	 */
-	 readdirSync("./database/functions/").forEach(file => {
+	readdirSync("./database/functions/").forEach(file => {
 		require(`../database/functions/${file}`)(client);
 		let eventName = file.split(".")[0];
 		console.log(`Loading Database function ${eventName}`);

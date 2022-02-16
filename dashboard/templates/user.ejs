@@ -1,16 +1,189 @@
-<%- include("partials/header", { bot, user, path, title: "Home" }) %>
-
+<%- include("partials/header", { bot, user, path, title: `User | ${user.username}` }) %>
+<style type="text/css">
+  option.Default {background-color: #1c1c1c;}
+  option.DefaultText {color: #FFFFFF;}
+  option.Red {background-color: #FF0000;}
+  option.Green {background-color: #00FF00;}
+  option.Blue {background-color: #0000FF;}
+  </style>
 <div class="container-sm center" style="margin-top: 25px;">
   <div class="d-grid gap-2 col-6 mx-auto">
+    <% if (alert) { %>
+      <div class="alert alert-success" role="alert">
+        <%= alert %>
+        <button class="btn btn-primary hoverable" style="float: right;">Ok</button>
+      </div>
+    <% } %>
     <h2 style="text-align: center;">
-        <img src=<%= `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}` %> alt=<%= `${user.username}'s avatar` %> style="width:96px;height:96px;">
-        <%= user.username %>#<%= user.discriminator %>
+      <canvas id="Profile" width="700" height="250" style="border:1px solid #000000;"></canvas>
     </h2>
-    <div class="wrap">
-    
+    <!-- <form method="POST"> -->
+      <div class="wrap">
+        <% if (results.donor !== null) { %> 
+          <label for="profileColor">Profile Color</label>
+          <input class="form-control"
+          id="profileColor"
+          style="width: 20%;"
+          value="<%= results.profileColor %>" 
+          data-jscolor="{preset:'small dark', position:'left'}" 
+          onchange="javascript: updateCanvas()">
+          <label for="textColor">Text Color</label>
+          <input class="form-control"
+          id="textColor"
+          style="width: 20%;"
+          value="<%= results.textColor %>" 
+          data-jscolor="{preset:'small dark', position:'left'}" 
+          onchange="javascript: updateCanvas()">
+        <% } else {%> 
+          <label for="profileColor">Profile Color</label>
+          <select class="form-control scrollbar-hidden"
+          type="list" 
+          id="profileColor"
+          style="width: 20%;"
+          value="<%= results.profileColor %>" 
+          onchange="javascript: updateCanvas()"
+          id="profileColor">
+            <option value="<%= results.profileColor %>" style="background-color: <%= results.profileColor %>" selected>Current</option>
+            <option class="Default" value="#1C1C1C">Default</option>
+            <option class="Red" value="#FF0000">Red</option>
+            <option class="Green" value="#00FF00">Green</option>
+            <option class="Blue" value="#0000FF">Blue</option>
+          </select>
+          <label for="textColor">Text Color</label>
+          <select class="form-control scrollbar-hidden"
+          type="list"
+          id="textColor"
+          style="width: 20%;"
+          value="<%= results.textColor %>" 
+          onchange="javascript: updateCanvas()" 
+          id="textColor">
+            <option value="<%= results.textColor %>" style="background-color: <%= results.textColor %>" selected>Current</option>
+            <option class="DefaultText" value="#FFFFFF">Default</option>
+            <option class="Red" value="#FF0000">Red</option>
+            <option class="Green" value="#00FF00">Green</option>
+            <option class="Blue" value="#0000FF">Blue</option>
+          </select>
+        <% } %> 
+        <button type="submit" class="btn btn-success text-white">Save Settings</button>
+      <!-- </form> -->
     </div>
-    <h1 style="text-align: center;">Votes: <%- results.voteTotal %> Blacklisted>: <%- results.blacklisted %> </h1>
+    <h1 style="text-align: center;">Votes: <%- results.voteTotal %> Blacklisted: <%- blacklist.length == 1 ? "True" : "False" %> </h1>
+    <% if(blacklist.length !== 0 && bot.convertBoolean(blacklist.appealed) !== 1) { %> 
+      <a href="/user/blacklist/appeal" class="btn btn-primary">Appeal Blacklist</a>
+    <% } %> 
   </div>
 </div>
+<script src="/jscolor.js"></script>
+<script>
+const applyText = (canvas, text) => {
+	const context = canvas.getContext('2d');
 
+	// Declare a base size of the font
+	let fontSize = 70;
+
+	do {
+		// Assign the font to the context and decrement it so it can be measured again
+		context.font = `${fontSize -= 10}px sans-serif`;
+		// Compare pixel width of the text to the canvas minus the approximate avatar size
+	} while (context.measureText(text).width > canvas.width - 300);
+
+	// Return the result to use in the actual canvas
+	return context.font;
+};
+
+  let canvas = document.getElementById("Profile");
+  let ctx = canvas.getContext("2d");
+  ctx.save();
+  let avatar = new Image('96px', '96px');
+  avatar.src = '<%- `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}` %>';
+  let results = <%- JSON.stringify(results) %>;
+  function calculatePercent(xp, nextPl) {
+    return (xp / nextPl) * 100;
+  }
+  let percentage = calculatePercent(results.xp, results.nextLevelXp) * 4;
+  let user = <%- JSON.stringify(user) %>;
+  if ( results.donor !== null) {
+    ctx.fillStyle = results.profileColor;
+    console.log(results.profileColor);
+    ctx.beginPath();
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.closePath();
+    ctx.font = applyText(canvas, user.username);
+    ctx.fillStyle = results.textColor ? results.textColor : "#FFFFFF";
+    ctx.fillText(user.username, canvas.width / 2.5, canvas.height / 2.3);
+  } else {
+    ctx.fillStyle = "#1c1c1c";
+    ctx.beginPath();
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.closePath();
+    ctx.font = applyText(canvas, user.username);
+    ctx.fillStyle = "#FFFFFF";
+    ctx.fillText(user.username, canvas.width / 2.5, canvas.height / 2.3);
+  }
+  function updateCanvas() {
+    let profileColor = document.getElementById("profileColor").value;
+    let textColor = document.getElementById("textColor").value;
+    // clear canvas
+    ctx.save();
+    ctx.beginPath();
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    // draw background
+    ctx.fillStyle = profileColor
+    ctx.beginPath();
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.closePath();
+    // draw something idk
+    ctx.fillStyle = "#FFFFFF";
+    ctx.beginPath();
+    ctx.fillRect(canvas.height / 2 , canvas.width / 2, canvas.width, canvas.height);
+    ctx.closePath();
+    // draw progress bar
+    ctx.strokeStyle = "#FFFFFF";
+    ctx.lineWidth = "2";
+    ctx.beginPath();
+    ctx.rect(canvas.width / 2.5, canvas.height / 1.7, 400, 20);
+    ctx.stroke();
+    // draw progress
+    ctx.strokeStyle = "#FFFFFF";
+    ctx.lineWidth = "2";
+    ctx.beginPath();
+    ctx.fillRect(canvas.width / 2.5, canvas.height / 1.7, percentage, 20);
+    ctx.stroke();
+    // draw percentage
+    ctx.font = "15px sans-serif";
+    ctx.fillStyle = "#FFFFFF";
+    ctx.fillText(`${Math.floor(calculatePercent(results.xp, results.nextLevelXp))}%`, canvas.width / 2.9, canvas.height / 1.55);
+    // draw prestige
+    ctx.font = "15px sans-serif";
+    ctx.fillStyle = "#FFFFFF";
+    ctx.fillText(`Prestige: ${results.prestige}`, 240, canvas.height / 1.3);
+    // draw level
+    ctx.font = "15px sans-serif";
+    ctx.fillStyle = "#FFFFFF";
+    ctx.fillText(`Level: ${results.currentLevel}`, 240, canvas.height / 1.15);
+    // draw xp
+    ctx.font = "15px sans-serif";
+    ctx.fillStyle = "#FFFFFF";
+    ctx.fillText(`XP: ${results.xp}`, 330, canvas.height / 1.3);
+    // draw next level xp
+    ctx.font = "15px sans-serif";
+    ctx.fillStyle = "#FFFFFF";
+    ctx.fillText(`Next Level XP: ${results.nextLevelXp}`, 330, canvas.height / 1.15);
+    // draw avatar and make it circle
+    avatar.src = `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}`;
+    avatar.onload = function() {
+    ctx.beginPath();
+    ctx.arc(125, 125, 100, 0, Math.PI * 2, true);
+    ctx.closePath();
+    ctx.clip();
+    ctx.drawImage(avatar, 25, 25, 200, 200);
+    ctx.restore();
+    }
+    // draw username
+    ctx.font = applyText(canvas, user.username);
+    ctx.fillStyle = textColor;
+    ctx.fillText(user.username, canvas.width / 2.5, canvas.height / 3);
+  };
+  updateCanvas();
+</script>
 <%- include("partials/footer") %>

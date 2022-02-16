@@ -13,7 +13,7 @@
     <form method="POST">
       <p class="h5" style="margin-bottom: 0.5rem; margin-top: 10px;">Announcement Channel:</p>
       <p style="font-style: italic;" class="disabled">the channel to send /announce messages to.</p>
-      <select class="form-control" name="AchannelID" value="<%= settings.AchannelID %>" placeholder="Announcement Channel ID.">
+      <select class="form-control scrollbar-hidden" name="AchannelID" value="<%= settings.AchannelID %>" placeholder="Announcement Channel ID.">
       <option value="">OFF</option>
       <% guild.channels.cache.forEach(channel => { %>
         <% if (channel.type !== "GUILD_TEXT") return %>
@@ -23,7 +23,7 @@
 
       <p class="h5" style="margin-bottom: 0.5rem; margin-top: 10px;">Join/leave message channel:</p>
       <p style="font-style: italic;" class="disabled">The channel to send join/leave messages to.</p>
-      <select class="form-control" name="joinChannelID" value="<%= settings.joinChannelID %>" placeholder="Join Channel ID.">
+      <select class="form-control scrollbar-hidden" name="joinChannelID" value="<%= settings.joinChannelID %>" placeholder="Join Channel ID.">
       <option value="">OFF</option>
       <% guild.channels.cache.forEach(channel => { %>
         <% if (channel.type !== "GUILD_TEXT") return %>
@@ -32,22 +32,52 @@
     </select>
 
       <p class="h5" style="margin-bottom: 0.5rem; margin-top: 10px;">Join Message:</p>
-      <p style="font-style: italic;" class="disabled">The message to send when a user joins your server you can use .</p>
+      <p style="font-style: italic;" class="disabled">The message to send when a user joins your server you can use.</p>
       <input type="text" class="form-control" name="joinMessage" value="<%= settings.joinMessage %>" placeholder="Your Join Message.">
 
       <p class="h5" style="margin-bottom: 0.5rem; margin-top: 10px;">Leave Message:</p>
-      <p style="font-style: italic;" class="disabled">The prefix that is added to discord messages in order to invoke commands.</p>
+      <p style="font-style: italic;" class="disabled">The message to send when a user joins your server you can use.</p>
       <input type="text" class="form-control" name="leaveMessage" value="<%= settings.leaveMessage %>" placeholder="Your Leave Message.">
 
       <p class="h5" style="margin-bottom: 0.5rem; margin-top: 10px;">Vent Channel:</p>
-      <p style="font-style: italic;" class="disabled">The prefix that is added to discord messages in order to invoke commands.</p>
-      <select class="form-control" name="ventChannelID" value="<%= settings.ventChannelID %>" placeholder="Your Vent Channel.">
+      <p style="font-style: italic;" class="disabled">The channel to send vent command messages to.</p>
+      <select class="form-control scrollbar-hidden" name="ventChannelID" value="<%= settings.ventChannelID %>" placeholder="Your Vent Channel.">
       <option value="">OFF</option>
       <% guild.channels.cache.forEach(channel => { %>
         <% if (channel.type !== "GUILD_TEXT") return %>
         <option value="<%= channel.id %>" <% if (channel.id === settings.ventChannelID) {%> selected <%} else {%> <% } %> > <%= channel.name %></option>
       <% }) %>
-    </select>
+      </select>
+
+      <p class="h5" style="margin-bottom: 0.5rem; margin-top: 10px;">Vent Log Channel:</p>
+      <p style="font-style: italic;" class="disabled">The channel to log vent command messages to.</p>
+      <select class="form-control scrollbar-hidden" name="vLogChannelID" value="<%= settings.vLogChannelID %>" placeholder="Your Log Vent Channel.">
+      <option value="">OFF</option>
+      <% guild.channels.cache.forEach(channel => { %>
+        <% if (channel.type !== "GUILD_TEXT") return %>
+        <option value="<%= channel.id %>" <% if (channel.id === settings.vLogChannelID) {%> selected <%} else {%> <% } %> > <%= channel.name %></option>
+      <% }) %>
+      </select>
+
+      <p class="h5" style="margin-bottom: 0.5rem; margin-top: 10px;">Log Channel:</p>
+      <p style="font-style: italic;" class="disabled">The audit log / command log channel.</p>
+      <select class="form-control scrollbar-hidden" name="logChannelID" value="<%= settings.logChannelID %>" placeholder="Your Log Channel.">
+      <option value="">OFF</option>
+      <% guild.channels.cache.forEach(channel => { %>
+        <% if (channel.type !== "GUILD_TEXT") return %>
+        <option value="<%= channel.id %>" <% if (channel.id === settings.logChannelID) {%> selected <%} else {%> <% } %> > <%= channel.name %></option>
+      <% }) %>
+      </select>
+
+      <p class="h5" style="margin-bottom: 0.5rem; margin-top: 10px;">Log Types:</p>
+      <p style="font-style: italic;" class="disabled">The types of things to log.</p>
+      <select class="form-control scrollbar-hidden" name="logTypes" value="<%= settings.logTypes %>" placeholder="Your Log Types.">
+      <option value="">OFF</option>
+      <% guild.channels.cache.forEach(channel => { %>
+        <% if (channel.type !== "GUILD_TEXT") return %>
+        <option value="<%= channel.id %>" <% if (channel.id === settings.logTypes) {%> selected <%} else {%> <% } %> > <%= channel.name %></option>
+      <% }) %>
+      </select>
 
       <p class="h5" style="margin-bottom: 0.5rem; margin-top: 10px;">Prefix:</p>
       <p style="font-style: italic;" class="disabled">The prefix that is added to discord messages in order to invoke commands.</p>

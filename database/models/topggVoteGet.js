@@ -15,7 +15,7 @@ module.exports = async (client, info) => {
 		const user = await client.getUser(info.user);
 			//if user does not exist add them
 			if(!user) {
-				require("./user")(client, info.user);
+				require("./createUser")(client, info.user);
 				sleep(100);
 				client.con.query(`UPDATE Users Set voteTotal = 1, lastVote = ${Date.now()} where userID = ${info.user}`);
 				//set embed description and send it to the vote channel

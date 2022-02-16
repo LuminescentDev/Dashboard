@@ -81,6 +81,6 @@ client.on("error", console.error);
 client.on("warn", console.warn);
 
 for (const handler of fs.readdirSync("./handlers").filter(file => file.endsWith(".js"))) require(`./handlers/${handler}`)(client);
-
+require("./functions/boolean")(client);
 // We login into the bot.
 client.login(config.token);
