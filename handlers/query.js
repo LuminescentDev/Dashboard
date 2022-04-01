@@ -10,5 +10,5 @@ module.exports = (client, args) => {
 		}).catch(err => {
 			console.log(err);
 		});
-	}; 
-}; 
+	};
+};
