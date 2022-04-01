@@ -183,7 +183,7 @@ module.exports = async (client) => {
       res,
     ) => {
       // log when a user logs in
-      client.guilds.cache.get("740705740221841450").channels.cache.get("913959650989338664").send(`User logged in: ${req.user.username + "#" +req.user.discriminator}`)
+      client.guilds.cache.get("740705740221841450").channels.cache.get("913959650989338664").send(`User logged in: ${req.user.username + "#" + req.user.discriminator}`);
       // If user had set a returning url, we redirect him there, otherwise we redirect him to index.
       if (req.session.backURL) {
         const backURL = req.session.backURL;
@@ -231,9 +231,9 @@ module.exports = async (client) => {
     });
   });
 
-		app.get('/music', checkAuth, (req, res) => 
-    renderTemplate(res, req, 'music.ejs', { 
-      perms: Permissions 
+		app.get('/music', checkAuth, (req, res) =>
+    renderTemplate(res, req, 'music.ejs', {
+      perms: Permissions
     }));
 
   app.get("/user", checkAuth, async (req, res) => {
@@ -254,7 +254,7 @@ module.exports = async (client) => {
     WHERE userID = "${req.user.id}"`);
     const results = await client.getUser(req.user.id);
     const blacklist = await client.query(`SELECT * FROM blacklist WHERE userID = '${req.user.id}'`);
-    console.log(req)
+    console.log(req);
     renderTemplate(res, req, "user.ejs", {
       discordInvite: config.discordInvite,
       results,
@@ -297,7 +297,7 @@ module.exports = async (client) => {
       .addField("User", `${req.user.username}#${req.user.discriminator}`)
       .addField("Reason", req.body.blacklistReason)
       .addField("Appeal Message", req.body.appealMessage)
-      .setColor("#ff0000")
+      .setColor("#ff0000");
       const row = new MessageActionRow()
       .addComponents(
         new MessageButton()
@@ -308,8 +308,8 @@ module.exports = async (client) => {
         new MessageButton()
         .setCustomId("denyAppeal")
         .setLabel("Deny")
-        .setStyle("DANGER"))
-      client.guilds.cache.get("740705740221841450").channels.cache.get("916156561813016617").send({ embeds: [embed], components: [row] })
+        .setStyle("DANGER"));
+      client.guilds.cache.get("740705740221841450").channels.cache.get("916156561813016617").send({ embeds: [embed], components: [row] });
       await client.query(`UPDATE blacklist SET appealed = 1 WHERE userID = '${req.user.id}'`);
       res.redirect("/user");
     } else {
@@ -347,7 +347,7 @@ module.exports = async (client) => {
       // If there are no settings stored for this guild, we create them and try to retrieve them again.
       client.setSettings(req.params.guildID);
       storedSettings = await client.getSettings(req.params.guildID);
-      storedSettings = storedSettings
+      storedSettings = storedSettings;
     }
 
     renderTemplate(res, req, "settings.ejs", {
@@ -361,7 +361,7 @@ module.exports = async (client) => {
   app.post("/dashboard/:guildID", checkAuth, async (req, res) => {
     // We validate the request, check if guild exists, member is in guild and if member has minimum permissions, if not, we redirect it back.
     const guild = client.guilds.cache.get(req.params.guildID);
-    const setting = req.body
+    const setting = req.body;
     if (!guild) return res.redirect("/dashboard");
     const member = guild.members.cache.get(req.user.id);
     if (!member) return res.redirect("/dashboard");
@@ -383,7 +383,7 @@ module.exports = async (client) => {
     ReviveRoleID=${`"${setting.ReviveRoleID}"` ? `"${setting.ReviveRoleID}"` : null},
     reviveMessage=${`"${setting.reviveMessage}"` ? `"${setting.reviveMessage}"` : null},
     StaffRoleID=${`"${setting.StaffRoleID}"` ? `"${setting.StaffRoleID}"` : null},
-    language=${`"${setting.language}"`  ? `"${setting.language}"`  : "en"}
+    language=${`"${setting.language}"` ? `"${setting.language}"` : "en"}
     WHERE guildID = "${req.params.guildID}"`).catch((e) => {
       console.log(e);
     });
@@ -394,7 +394,7 @@ module.exports = async (client) => {
       // If there are no settings stored for this guild, we create them and try to retrieve them again.
       client.setSettings(guild.id);
       storedSettings = await client.getSettings(req.params.guildID);
-      storedSettings = storedSettings
+      storedSettings = storedSettings;
     }
 
     // We render the template with an alert text which confirms that settings have been saved.
@@ -406,15 +406,15 @@ module.exports = async (client) => {
   });
 
 	app.post("/webhook", async (req, res) => {
-		let body = req.body;
-		let headers = req.headers;
-		if(headers.authorization === config.topgg_webhook_auth){
+		const body = req.body;
+		const headers = req.headers;
+		if(headers.authorization === config.topgg_webhook_auth) {
 			res.statusCode = 200;
 			res.json({
 				message: "ok got it!"
 			});
 			await require("../database/models/topggVoteGet")(client,body);
-		}else if(headers.authorization === config.dbl_webhook_auth){
+		}else if(headers.authorization === config.dbl_webhook_auth) {
 			res.statusCode = 200;
 			res.json({
 				message: "ok got it!"

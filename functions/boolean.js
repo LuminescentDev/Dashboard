@@ -14,5 +14,5 @@ module.exports = client => {
                 return 0;
                 break;
         }
-    }
-}
+    };
+};
