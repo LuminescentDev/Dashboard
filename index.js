@@ -35,7 +35,7 @@ client.on("ready", async () => {
   );
 
   client.user.setActivity(
-    "The Dashboard",
+    "My recode",
     { type: "WATCHING" },
   );
 
